@@ -1,0 +1,40 @@
+  joint_state_controller:
+    type: "joint_state_controller/JointStateController"
+    publish_rate: 50
+    
+  my_controller:
+    type: "my_controller/speed_controller"
+    joints: [ 'car_base_wheel2', 'car_base_wheel1', 'car_base_wheel4', 'car_base_wheel3']
+    
+  mobile_base_controller:
+    type: "diff_drive_controller/DiffDriveController"
+    left_wheel  : [ 'car_base_wheel2', 'car_base_wheel1' ]
+    right_wheel : [ 'car_base_wheel4', 'car_base_wheel3' ]
+    pose_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
+    twist_covariance_diagonal: [0.001, 0.001, 0.001, 0.001, 0.001, 0.03]
+    
+  gazebo_ros_control:
+    pid_gains:
+      car_base_wheel2:
+        p: 10.0
+      car_base_wheel4:
+         p: 10.0
+      car_base_wheel1:
+         p: 10.0
+      car_base_wheel3:
+        p : 10.0
+
+    base_frame_id: base_link
+
+    linear:
+      x:
+        has_velocity_limits    : true  
+        max_velocity           : 0.2   # m/s
+        has_acceleration_limits: true
+        max_acceleration       : 0.6   # m/s^2
+    angular:
+      z:
+        has_velocity_limits    : true
+        max_velocity           : 2.0   # rad/s
+        has_acceleration_limits: true
+        max_acceleration       : 6.0   # rad/s^2

@@ -1,0 +1,249 @@
+<?xml version="1.0"?>
+<robot name="rbo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- variable -->
+    <xacro:property name="PI" value="3.1415926"/>
+    <xacro:property name="car_width" value="0.8"/>
+    <xacro:property name="car_length" value="1.6"/>
+    <xacro:property name="car_height" value="0.26"/>
+    <xacro:property name="wheel_length" value="0.1"/>
+    <xacro:property name="wheel_radius" value="0.2"/>
+    <xacro:property name="wheel_origin_xyz" value="0.0 0.0 0.0"/>
+    <xacro:property name="wheel_origin_rpy" value="0.0 ${PI/2} 0.0"/>
+
+<material name="Black">
+	<color rgba="0 0 0 1"/>
+</material>
+
+    <!-- macro -->
+    <xacro:macro name="default_inertial" params="mass">
+        <inertial>
+            <mass value="${mass}" />
+            <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0" />
+        </inertial>
+    </xacro:macro>
+
+    <xacro:macro name="box_geometry" params="width length height">
+        <geometry>
+            <box size="${width} ${length} ${height}"/>
+        </geometry>
+    </xacro:macro>
+
+    <xacro:macro name="cylinder_geometry" params="length radius">
+        <geometry>
+            <cylinder length="${length}" radius="${radius}"/>
+        </geometry>
+    </xacro:macro>
+
+    <xacro:macro name="default_origin" params="xyz rpyaw">
+        <origin xyz="${xyz}" rpy="${rpyaw}"/>
+    </xacro:macro>
+
+    <!-- links -->
+    <link name="car_link">
+        <visual>
+            <xacro:box_geometry width="${car_width}" length="${car_length}" height="${car_height}"/>
+		<material name="2">
+		     <color rgba="9 3 25 0.8"/>
+		</material>
+        </visual>
+        <collision>
+            <xacro:box_geometry width="${car_width}" length="${car_length}" height="${car_height}"/>
+        </collision>
+        <xacro:default_inertial mass="5.0"/>
+    </link>
+
+    <link name="wheel_LB">
+        <visual>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+            <material name="Black"/>
+        </visual>
+        <collision>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+        </collision>
+        <xacro:default_inertial mass="0.2"/>
+    </link>
+
+    <link name="wheel_LF">
+        <visual>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+            <material name="Black"/>
+        </visual>
+        <collision>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+        </collision>
+        <xacro:default_inertial mass="0.2"/>
+    </link>
+
+
+    <link name="wheel_RB">
+        <visual>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+            <material name="Black"/>
+        </visual>
+        <collision>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+        </collision>
+        <xacro:default_inertial mass="0.2"/>
+    </link>
+
+    <link name="wheel_RF">
+        <visual>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+            <material name="Black"/>
+        </visual>
+        <collision>
+            <xacro:cylinder_geometry length="${wheel_length}" radius="${wheel_radius}"/>
+            <xacro:default_origin xyz="${wheel_origin_xyz}" rpyaw="${wheel_origin_rpy}" />
+        </collision>
+        <xacro:default_inertial mass="0.2"/>
+    </link>
+
+    <!-- joints -->
+    <joint name="car_base_wheel1" type="continuous">
+        <origin xyz="${(wheel_length+car_width)/2.0} 0.5 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="car_link"/>
+        <child link="wheel_LB"/>
+        <axis xyz="1.0 0.0 0.0"/>
+    </joint>
+    
+    <joint name="car_base_wheel2" type="continuous">
+        <origin xyz="${(wheel_length+car_width)/2.0} -0.5 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="car_link"/>
+        <child link="wheel_LF"/>
+        <axis xyz="1.0 0.0 0.0"/>
+    </joint>
+    
+    <joint name="car_base_wheel3" type="continuous">
+        <origin xyz="${(wheel_length+car_width)/-2.0} 0.5 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="car_link"/>
+        <child link="wheel_RB"/>
+        <axis xyz="1.0 0.0 0.0"/>
+    </joint>
+    
+    <joint name="car_base_wheel4" type="continuous">
+        <origin xyz="${(wheel_length+car_width)/-2.0} -0.5 0.0" rpy="0.0 0.0 0.0"/>
+        <parent link="car_link"/>
+        <child link="wheel_RF"/>
+        <axis xyz="1.0 0.0 0.0"/>
+    </joint>
+    
+    <!-- base_link -->
+    <link name="base_link"/>
+    <joint name="base_link_car" type="fixed">
+        <origin xyz="0.0 0.0 ${wheel_radius}" rpy="0.0 0.0 0.0"/>
+        <parent link="base_link"/>
+        <child link="car_link"/>
+    </joint>
+    
+<!-- transmission -->
+
+        <transmission name="wheel_LB_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="car_base_wheel1">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="LB_motor">
+                <mechanicalReducction>1</mechanicalReducction>
+            </actuator>
+        </transmission>
+  
+
+        <transmission name="wheel_LF_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="car_base_wheel2">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="LF_motor">
+                <mechanicalReducction>1</mechanicalReducction>
+            </actuator>
+        </transmission>
+  
+
+        <transmission name="wheel_RB_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="car_base_wheel3">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="RB_motor">
+                <mechanicalReducction>1</mechanicalReducction>
+            </actuator>
+        </transmission>
+  
+
+        <transmission name="wheel_RF_transmission">
+            <type>transmission_interface/SimpleTransmission</type>
+            <joint name="car_base_wheel4">
+                <hardwareInterface>hardware_interface/VelocityJointInterface</hardwareInterface>
+            </joint>
+            <actuator name="RF_motor">
+                <mechanicalReducction>1</mechanicalReducction>
+            </actuator>
+        </transmission>
+  
+<!-- gazebo -->
+<gazebo reference="car_link">
+    <material>Gazebo/PaintedWall</material>
+    <mu1>0.6</mu1>
+    <mu2>0.5</mu2>
+</gazebo>
+<gazebo reference="wheel_LB">
+    <material>Gazebo/WoodFloor</material>
+</gazebo>
+<gazebo reference="wheel_LF">
+    <material>Gazebo/WoodFloor</material>
+</gazebo>
+<gazebo reference="wheel_RB">
+    <material>Gazebo/WoodFloor</material>
+</gazebo>
+<gazebo reference="wheel_RF">
+    <material>Gazebo/WoodFloor</material>
+</gazebo>
+ <!--   #plagin#    -->
+
+  <gazebo>
+        <plugin name="differential_drive_controller" filename="/opt/ros/noetic/lib/libgazebo_ros_skid_steer_drive.so">
+            <robotNamespace>/</robotNamespace>
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50.0</updateRate>
+            <leftFrontJoint>car_base_wheel2</leftFrontJoint>
+            <rightFrontJoint>car_base_wheel4</rightFrontJoint>
+            <leftRearJoint>car_base_wheel1</leftRearJoint>
+            <rightRearJoint>car_base_wheel3</rightRearJoint>
+            <wheelSeparation>0.8</wheelSeparation>
+            <wheelDiameter>0.2</wheelDiameter>
+            <torque>1.0</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <broadcastTF>1</broadcastTF>
+            <publishWheelTF>true</publishWheelTF>
+            <publishWheelJointState>true</publishWheelJointState>
+            <legecyMode>false</legecyMode>
+            <wheelAcceleration>1</wheelAcceleration>
+        </plugin>
+        
+       <plugin name="gazebo_ros_control" filename="/opt/ros/noetic/lib/libgazebo_ros_control.so">
+            <robotNamespace>/</robotNamespace>
+       </plugin>
+       
+
+  </gazebo>
+
+  <!--gazebo>
+    <plugin name="gazebo_ros_control" filename="/opt/ros/noetic/lib/libgazebo_ros_control.so">
+      <robotNamespace>/</robotNamespace>
+    </plugin>
+  </gazebo-->
+
+    
+</robot>
+
+	    

@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot name="rbo" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<xacro:include filename="$(find ros_urdf_learn)/urdf/rbo1.urdf.xacro" />
+
+ <!--   #plagin#    -->
+ <gazebo>
+     <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+         <robotNamespace>/</robotNamespace>
+         <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+     </plugin>
+ </gazebo>
+
+  <gazebo>
+        <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50.0</updateRate>
+            <leftFrontJoint>car_base_wheel2</leftFrontJoint>
+            <rightFrontJoint>car_base_wheel4</rightFrontJoint>
+            <leftRearJoint>car_base_wheel1</leftRearJoint>
+            <rightRearJoint>car_base_wheel3</rightRearJoint>
+            <wheelSeparation>0.8</wheelSeparation>
+            <wheelDiameter>0.2</wheelDiameter>
+            <torque>1.0</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <publishWheelTF>true</publishWheelTF>
+            <publishWheelJointState>true</publishWheelJointState>
+            <legecyMode>false</legecyMode>
+            <wheelAcceleration>1</wheelAcceleration>
+        </plugin>
+    </gazebo>
+
+</robot>
+
+  <gazebo>
+        <plugin name="differential_drive_controller" filename="../opt/ros/noetic/lib/libgazebo_ros_diff_drive.so">
+            <alwaysOn>true</alwaysOn>
+            <updateRate>50.0</updateRate>
+            <leftJoint>car_base_wheel2</leftJoint>
+            <rightJoint>car_base_wheel4</rightJoint>
+            <wheelSeparation>0.8</wheelSeparation>
+            <wheelDiameter>0.2</wheelDiameter>
+            <torque>1.0</torque>
+            <commandTopic>cmd_vel</commandTopic>
+            <odometryTopic>odom</odometryTopic>
+            <odometryFrame>odom</odometryFrame>
+            <robotBaseFrame>base_link</robotBaseFrame>
+            <publishWheelTF>true</publishWheelTF>
+            <publishWheelJointState>true</publishWheelJointState>
+            <legecyMode>false</legecyMode>
+            <wheelAcceleration>1</wheelAcceleration>
+        </plugin>
+    </gazebo>
+    
+
