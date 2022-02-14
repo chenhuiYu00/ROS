@@ -13,6 +13,9 @@
 <material name="Black">
 	<color rgba="0 0 0 1"/>
 </material>
+<material name="2">
+       <color rgba="1 0 0.2 0.8"/>
+</material>
 
     <!-- macro -->
     <xacro:macro name="default_inertial" params="mass">
@@ -42,9 +45,7 @@
     <link name="car_link">
         <visual>
             <xacro:box_geometry width="${car_width}" length="${car_length}" height="${car_height}"/>
-		<material name="2">
-		     <color rgba="9 3 25 0.8"/>
-		</material>
+	    <material name="2"/>
         </visual>
         <collision>
             <xacro:box_geometry width="${car_width}" length="${car_length}" height="${car_height}"/>
