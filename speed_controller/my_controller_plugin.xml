@@ -1,0 +1,7 @@
+<library path="lib/libros_urdf_learn">
+  <class name="my_controller/speed_controller" type="my_controller::speed_controller" base_class_type="controller_interface::ControllerBase">
+  <description>
+  This is my controller.
+  </description>
+  </class>
+</library>
