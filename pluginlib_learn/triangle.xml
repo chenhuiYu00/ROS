@@ -1,0 +1,5 @@
+<library path="lib/libpluginlib_learn">
+  <class name="regular_plugins/triangle" type="regular_plugins::triangle" base_class_type="base_class::regular">
+    <description>This is a triangle plugin.</description>
+  </class>
+</library>
